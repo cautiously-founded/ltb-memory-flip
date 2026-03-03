@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./App.css";
-import ReactLogo from './assets/react.svg';
-
 
 const SECTION1 = ["a", "b", "c", "d", "e", "f"];
 const SECTION2 = ["A", "B", "C", "D", "E", "F"];
 
 const shuffle = (array) => [...array].sort(() => Math.random() - 0.5);
+
+// Generate random Picsum image
+const getRandomImage = (id) =>
+  `https://picsum.photos/100?random=${id}-${Math.random()}`;
 
 const Card = ({ card, handleClick, disabled }) => (
   <div className="card" onClick={() => !disabled && handleClick(card)}>
@@ -17,7 +19,12 @@ const Card = ({ card, handleClick, disabled }) => (
       transition={{ duration: 0.3 }}
     >
       <div className="front">{card.value}</div>
-      <div className="back">?</div>
+
+      <div className="back">
+        <img src={card.image} alt="card back" className="card-image" />
+        <span className="question-mark">?</span>
+
+      </div>
     </motion.div>
   </div>
 );
@@ -30,7 +37,9 @@ export default function MemoryGame() {
   const [lockBoard, setLockBoard] = useState(false);
   const [gameWon, setGameWon] = useState(false);
 
-  useEffect(() => startGame(), []);
+  useEffect(() => {
+    startGame();
+  }, []);
 
   const startGame = () => {
     const shuffledLeft = shuffle(SECTION1).map((v, idx) => ({
@@ -38,12 +47,15 @@ export default function MemoryGame() {
       value: v,
       flipped: false,
       matched: false,
+      image: getRandomImage(`L${idx}`),
     }));
+
     const shuffledRight = shuffle(SECTION2).map((v, idx) => ({
       id: idx,
       value: v,
       flipped: false,
       matched: false,
+      image: getRandomImage(`R${idx}`),
     }));
 
     setLeftCards(shuffledLeft);
@@ -75,35 +87,48 @@ export default function MemoryGame() {
   useEffect(() => {
     if (selectedLeft && selectedRight) {
       setLockBoard(true);
+
       const isMatch =
-        selectedLeft.value.toLowerCase() === selectedRight.value.toLowerCase();
+        selectedLeft.value.toLowerCase() ===
+        selectedRight.value.toLowerCase();
 
       if (isMatch) {
         setLeftCards((prev) =>
           prev.map((c) =>
-            c.value === selectedLeft.value ? { ...c, matched: true } : c
-          )
-        );
-        setRightCards((prev) =>
-          prev.map((c) =>
-            c.value.toLowerCase() === selectedRight.value.toLowerCase()
+            c.value === selectedLeft.value
               ? { ...c, matched: true }
               : c
           )
         );
+
+        setRightCards((prev) =>
+          prev.map((c) =>
+            c.value.toLowerCase() ===
+            selectedRight.value.toLowerCase()
+              ? { ...c, matched: true }
+              : c
+          )
+        );
+
         resetTurn();
       } else {
         setTimeout(() => {
           setLeftCards((prev) =>
             prev.map((c) =>
-              c.id === selectedLeft.id ? { ...c, flipped: false } : c
+              c.id === selectedLeft.id
+                ? { ...c, flipped: false }
+                : c
             )
           );
+
           setRightCards((prev) =>
             prev.map((c) =>
-              c.id === selectedRight.id ? { ...c, flipped: false } : c
+              c.id === selectedRight.id
+                ? { ...c, flipped: false }
+                : c
             )
           );
+
           resetTurn();
         }, 800);
       }
@@ -130,6 +155,7 @@ export default function MemoryGame() {
   return (
     <div className="game-container">
       <h1>Match Lowercase ↔ Uppercase</h1>
+
       <div className="game-board">
         <div className="section">
           {leftCards.map((card) => (
@@ -161,8 +187,9 @@ export default function MemoryGame() {
       <button className="restart-btn" onClick={startGame}>
         Restart Game
       </button>
-      <br/>
-      <br/>
+
+      <br />
+      <br />
     </div>
   );
 }
