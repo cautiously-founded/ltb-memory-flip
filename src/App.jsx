@@ -7,7 +7,6 @@ const SECTION2 = ["A", "B", "C", "D", "E", "F"];
 
 const shuffle = (array) => [...array].sort(() => Math.random() - 0.5);
 
-// Generate random Picsum image
 const getRandomImage = (id) =>
   `https://picsum.photos/100?random=${id}-${Math.random()}`;
 
@@ -23,7 +22,6 @@ const Card = ({ card, handleClick, disabled }) => (
       <div className="back">
         <img src={card.image} alt="card back" className="card-image" />
         <span className="question-mark">?</span>
-
       </div>
     </motion.div>
   </div>
@@ -187,9 +185,6 @@ export default function MemoryGame() {
       <button className="restart-btn" onClick={startGame}>
         Restart Game
       </button>
-
-      <br />
-      <br />
     </div>
   );
 }

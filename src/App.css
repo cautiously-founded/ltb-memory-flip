@@ -137,3 +137,26 @@ body {
     font-size: 24px;
   }
 }
+
+.camera-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.camera-video {
+  width: 300px;
+  max-width: 90%;
+  border-radius: 12px;
+  margin-top: 10px;
+  background: black;
+}
+
+.camera-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  background: #4caf50;
+  color: white;
+}
